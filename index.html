@@ -1,0 +1,153 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css">
+  <!-- libraries -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://kit.fontawesome.com/6ac3910c4e.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="style.css">
+
+  <title>Survival Items</title>
+
+</head>
+
+<body>
+
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-sm navbar-dark navbar_main">
+    <div class="logo">
+      <a class="navbar-brand" href="index.html">
+        <h1>Survival Gear</h1>
+        <h2>H7006 | Web 3D Applications</h2>
+        <p>Built by Maxwell Burson | 278900</p>
+      </a>
+    </div>
+
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+
+        <li class="nav-item">
+          <a class="nav-link active" href="index.html">Home</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-bs-toggle="dropdown">Objects</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="medkit.html">Medkit</a>
+            <a class="dropdown-item" href="compass.html">Compass</a>
+            <a class="dropdown-item" href="flashlight.html">Flashlight</a>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="about.html">About</a>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+
+  <!--hero section -->
+  <div id="main_3d_image">
+    <div id="main_text" class="col-xs-12 col-sm-4">
+      <h2>Survival Items | Interactive 3D Models</h2>
+      <p>Pick from the 3 models below. I've built a compass, flashlight, and medkit, all items that would be handy to have in the wild. Use the controls to inspect, rotate, and animate the different models.</p>
+    </div>
+  </div>
+
+  <br>
+
+  <!-- model cards flashlight,compass,medkit -->
+  <div class="container-fluid">
+    <div class="row" id="card-row">
+
+      <div class="col-sm-4">
+        <div class="card">
+          <a href="medkit.html">
+            <img class="card-img-top img-fluid img-thumbnail" src="assets/images/MedkitThumbnail.png" alt="Medkit">
+          </a>
+          <div class="card-body">
+            <h3 class="card-title" id="title-1">Medkit</h3>
+            <p class="card-text" id="desc-1">Loading...</p>
+
+            <a href="medkit.html" class="btn btn-primary">View 3D Model</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="card">
+          <a href="compass.html">
+            <img class="card-img-top img-fluid img-thumbnail" src="assets/images/CompassThumbnail.png" alt="Compass">
+          </a>
+          <div class="card-body">
+            <h3 class="card-title" id="title-2">Compass</h3>
+            <p class="card-text" id="desc-2">Loading...</p>
+            <a href="compass.html" class="btn btn-primary">View 3D Model</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="card">
+          <a href="flashlight.html">
+            <img class="card-img-top img-fluid img-thumbnail" src="assets/images/FlashlightThumbnail.png" alt="Flashlight">
+          </a>
+
+          <div class="card-body">
+            <h3 class="card-title" id="title-3">Flashlight</h3>
+            <p class="card-text" id="desc-3">Loading...</p>
+            <a href="flashlight.html" class="btn btn-primary">View 3D Model</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <br>
+
+  <!-- footer -->
+  <nav class="navbar navbar-expand-sm footer-nav">
+    <div class="container-fluid">
+      <div class="navbar-text float-left copyright">
+        <p>&copy; 2026 Maxwell Burson | Survival Items</p>
+      </div>
+      <div class="navbar-text float-right social">
+        <a href="#"><i class="fab fa-facebook-square fa-2x"></i></a>
+        <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
+        <a href="#"><i class="fab fa-github-square fa-2x"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    $.getJSON('data.json', function(data) {
+      $.each(data.objects, function(i, obj) {
+        $('#title-' + obj.id).text(obj.name);
+        $('#desc-' + obj.id).text(obj.desc);
+      });
+    });
+  </script>
+
+</body>
+
+
+</html>
+
+
+

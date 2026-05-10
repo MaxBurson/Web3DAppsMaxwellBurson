@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style_button.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/6ac3910c4e.js" crossorigin="anonymous"></script>
+
+  <title>About | Maxwell</title>
+</head>
+
+<body>
+
+  <!-- navbar -->
+   <!-- title section (top left) -->
+  <nav class="navbar navbar-expand-sm navbar-dark navbar_main">
+    <div class="logo">
+      <a class="navbar-brand" href="index.html">
+        <h1>Survival Gear</h1>
+        <h2>H7006 | Web 3D Applications</h2>
+        <p>Built by Maxwell Burson | 278900</p>
+      </a>
+    </div>
+
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Home</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-bs-toggle="dropdown">Objects</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="medkit.html">Medkit</a>
+            <a class="dropdown-item" href="compass.html">Compass</a>
+            <a class="dropdown-item" href="flashlight.html">Flashlight</a>
+          </div>
+        </li>
+
+
+        <li class="nav-item">
+          <a class="nav-link active" href="about.html">About</a>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+
+<!-- about stuff -->
+  <div class="container-fluid main_contents">
+
+    <!-- overview -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="about-section">
+          <h2>Overview</h2>
+          <p>This is my website for H7006 Web 3D Applications at the University of Sussex. I originally built the medkit, and then liked the idea of survival ideas, like knives, compasses, tents, torches, etc. I finalised my theme as survival items with a Flashlight, Compass, and Medkit. Each model is viewable in a 3D environment allowing you to view the animations, wireframes, etc.</p>
+          <p>As taught in the labs (and a few extras), the website uses HTML5, CSS3, Bootstrap 5, Three.js, JavaScript, jQuery, AJAX, JSON, PHP, and SQLite.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D modelling section -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="about-section">
+          <h2>3D Modelling</h2>
+          <p>Again, as taught in the labs, the three models were built from scratch in Blender, and exported to GLB files ready for the website.</p>
+          <ul>
+            <li><strong>Medkit</strong> | started as a flat surface, with the corners rounded and walls built up. The lid was built on, but then later separated for the animation. The hinges were added, and the pivot point was moved to here. The red crosses used their own material and were placed on all sides of the object to make it obviously a medkit. The red seemed to work well with an olive green that gave it a military look.</li>
+            <li><strong>Flashlight</strong> | next the flashlight was made. Taking basic inspiration from online, it started as a cylinder with a cone shaped end which is where the bulb was eventually added. A 'grip' texture was downloaded from the internet, and pasted onto the handle section of the flashlight. The animation made the bulb, and glass brighten, emitting light. Whilst the switch was slid between positions.</li>
+            <li><strong>Compass</strong> | finally, again with some online inspiration, started as a flat disk with the walls built up around it. The needle was a simple cylinder with a dial on it, all with different materials. A compass face texture was downloaded from online, and pasted onto the bottom of the compass, giving it a beautiful finish in combination with the 'brass' like material. The animation was simple and featured the lid closing and opening.</li>
+          </ul>
+          <p>All animations used the keyframing feature in the Blender timeline, and exported with the GLB export, meaning a button can be hooked up through Three.js, so the animations can be viewed.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- my design choices -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="about-section">
+          <h2>Design Choices</h2>
+          <p>The website structure was heavily inspired by the website built up in the labs... But I played around with positionings, and colours, to make the website actually keep the 'survival theme' instead of just being a repeat of the lab website. Here are some key choices I made:</p>
+          <ul>
+            <li><strong>Dark green navbar</strong> | the forest green felt fitting for a survival aesthetic and gives a really nice contrast against the rest of the content.</li>
+            <li><strong>Oswald and Open Sans</strong> | I'm a strong believer that even a couple of fonts can really help differ the webpage from a generic one, so I decided on these two fonts as they look nice together.</li>
+            <li><strong>Bootstrap fluid grid</strong> | the product cards use col-sm-4 so they are side by side on a computer, but stack nicely on a mobile, without needing further CSS structuring. (The entire website, using Bootstrap, was built with mobile users in mind, keeping it all super mobile friendly in addition to desktop friendly.)</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- technology used -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="about-section">
+          <h2>Technologies Used</h2>
+          <div class="row">
+            <div class="col-sm-6">
+              <h4>Front End</h4>
+              <ul>
+                <li>HTML5</li>
+                <li>CSS3</li>
+                <li>Bootstrap 5.3</li>
+                <li>Three.js r106</li>
+                <li>OrbitControls</li>
+                <li>GLTFLoader</li>
+                <li>dat.GUI 0.7.9</li>
+                <li>jQuery 3.6.4</li>
+              </ul>
+            </div>
+            <div class="col-sm-6">
+              <h4>Back End</h4>
+              <ul>
+                <li>PHP</li>
+                <li>SQLite</li>
+                <li>JSON</li>
+                <li>AJAX / jQuery</li>
+                <li>MVC structure</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- the testing section -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="about-section">
+          <h2>Testing</h2>
+          <p>I ensured to test everything as I built it. The key parts I checked are as follows:</p>
+          <ul>
+            <li><strong>Button behaviour</strong> | each of the buttons in the 3D website view were tested individually on the different pages, and ensured they performed the task they are supposed to.</li>
+            <li><strong>Responsiveness</strong> | checked at different pixel screens using Chrome DevTools, to ensure the website worked perfectly on mobile, to desktop, and any sizes in between.</li>
+            <li><strong>Model checks</strong> | each GLB was previewed in <a href="https://gltf-viewer.donmccurdy.com/" target="_blank">gltf-viewer.donmccurdy.com</a> as recommended in the labs, to ensure the objects and animations exported as expected.</li>
+            <li><strong>Cross-browser</strong> | ensured that the website worked in Chrome and also Firefox.</li>
+          </ul>
+          <p>A couple of issues, that I managed to fix:</p>
+          <ul>
+            <li>Models were showing super dark on the website, this was caused by physicallyCorrectLights being enabled with too little light intensity. I fixed it by removing it and adding a 3-light setup (hemisphere + two directional).</li>
+            <li>Dropdown menu wasn't working... I found out this was caused by Bootstrap JS being loaded 3 times all together. I fixed it by keeping only the one CDN bundle.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- GitHubUPLOAD YOUR GIT LINK!-->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="about-section">
+          <h2>Github</h2>
+          <p><a href="#" id="github-link">[Github URL — add before submission]</a></p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="overlay" id="imgOverlay" onclick="closeOverlay()">
+    <img id="overlayImg" src="" alt="Full size image">
+  </div>
+
+  <br>
+
+  <!-- footer section-->
+  <nav class="navbar navbar-expand-sm footer-nav">
+    <div class="container-fluid">
+      <div class="navbar-text float-left copyright">
+        <p>&copy; 2026 Maxwell Burson | Survival Items</p>
+      </div>
+      <div class="navbar-text float-right social">
+        <a href="#"><i class="fab fa-facebook-square fa-2x"></i></a>
+        <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
+        <a href="#"><i class="fab fa-github-square fa-2x"></i></a>
+      </div>
+    </div>
+  </nav>
+  <script>
+    function openOverlay(src) {
+      document.getElementById('overlayImg').src = src;
+      document.getElementById('imgOverlay').classList.add('active');
+    }
+
+    function closeOverlay() {
+      document.getElementById('imgOverlay').classList.remove('active');
+    }
+  </script>
+
+</body>
+</html>
+
+
+
