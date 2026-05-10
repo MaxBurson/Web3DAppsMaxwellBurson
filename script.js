@@ -162,13 +162,32 @@ function init() {
     btn.addEventListener('click', function() {
 
         if (actions.length > 0) {
+            var playOnce = currentModelPath.includes('Flashlight') || currentModelPath.includes('Medkit') || currentModelPath.includes('Compass');
             actions.forEach(function(action) {
                 action.timeScale = 1;
                 action.reset();
+                if (playOnce) {
+                    action.setLoop(THREE.LoopOnce);
+                    action.clampWhenFinished = true;
+                }
                 action.play();
             });
+
             if (sound.isPlaying) sound.stop();
-            sound.play();
+
+            var audioDelay = 0;
+            if (currentModelPath.includes('Medkit')) audioDelay = 100;
+            if (currentModelPath.includes('Compass')) audioDelay = 3600;
+            if (currentModelPath.includes('Flashlight')) audioDelay = 700;
+
+            if (audioDelay > 0) {
+                setTimeout(function() {
+                    if (sound.isPlaying) sound.stop();
+                    sound.play();
+                }, audioDelay);
+            } else {
+                sound.play();
+            }
         }
 
         // start flashlight emission sync
@@ -315,7 +334,7 @@ function animate() {
         });
 
         if (elapsed > 54 / 24) {
-            flashlightAnimStartTime = clock.getElapsedTime();
+            flashlightAnimating = false;
         }
     }
 
