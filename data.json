@@ -3,25 +3,25 @@
     {
       "id": 1,
       "name": "Medkit",
-      "desc": "A 3D model of a medical kit, modelled in Blender. Features a detailed box body with a red cross emblem and hinged lid. Use the buttons below the viewer to play the animation, toggle wireframe view, rotate the model, and control the lighting.",
+      "desc": "A 3D model of a medkit, made in Blender. Features an olive green body with red crosses on each side with a hinged lid. Use the buttons below the viewer to play the animation, toggle wireframe view, rotate the model, and control the lighting.",
       "model": "assets/models/Medkit/MedkitMaxwell.glb",
-      "thumb": "assets/images/medkit_thumb.jpg",
+      "thumb": "assets/images/MedkitThumbnail.png",
       "page": "medkit.html"
     },
     {
       "id": 2,
       "name": "Compass",
-      "desc": "A 3D model of a navigational compass, modelled in Blender. Features a detailed compass rose, bezel ring, and rotating needle. Use the buttons below the viewer to play the animation, toggle wireframe view, rotate the model, and control the lighting.",
+      "desc": "A 3D model of a compass, made in Blender. Features a detailed compass body, a compass face, and rotating needle. Use the buttons below the viewer to play the animation, toggle wireframe view, rotate the model, and control the lighting.",
       "model": "assets/models/Compass/compassMaxwell.glb",
-      "thumb": "assets/images/compass_thumb.jpg",
+      "thumb": "assets/images/CompassThumbnail.png",
       "page": "compass.html"
     },
     {
       "id": 3,
       "name": "Flashlight",
-      "desc": "A 3D model of a tactical flashlight, modelled in Blender. Features a detailed torch body with textured grip, lens housing, and on/off switch. Use the buttons below the viewer to play the animation, toggle wireframe view, rotate the model, and control the lighting.",
+      "desc": "A 3D model of a survival flashlight, made in Blender. Features a detailed torch body with textured grip, lens cone, and on/off sliding switch. Use the buttons below the viewer to play the animation, toggle wireframe view, rotate the model, and control the lighting.",
       "model": "assets/models/Flashlight/flashlightMaxwell.glb",
-      "thumb": "assets/images/flashlight_thumb.jpg",
+      "thumb": "assets/images/FlashlightThumbnail.png",
       "page": "flashlight.html"
     }
   ]

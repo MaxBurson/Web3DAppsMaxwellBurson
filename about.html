@@ -155,6 +155,7 @@
           <ul>
             <li>Models were showing super dark on the website, this was caused by physicallyCorrectLights being enabled with too little light intensity. I fixed it by removing it and adding a 3-light setup (hemisphere + two directional).</li>
             <li>Dropdown menu wasn't working... I found out this was caused by Bootstrap JS being loaded 3 times all together. I fixed it by keeping only the one CDN bundle.</li>
+            <li>There was a strange issue with my flashlight model, whilst exporting, wouldn't pick up the emission animation on the bulb and glass properties. A work around for this was manually changing the base colour through JavaScript using Three.js. This work around is commented and highlighted in the script.js.</li>
           </ul>
         </div>
       </div>
@@ -165,7 +166,7 @@
       <div class="col-sm-12">
         <div class="about-section">
           <h2>Github</h2>
-          <p><a href="#" id="github-link">[Github URL — add before submission]</a></p>
+          <p><a href="https://github.com/MaxBurson/Web3DAppsMaxwellBurson" target="_blank">https://github.com/MaxBurson/Web3DAppsMaxwellBurson</a></p>
         </div>
       </div>
     </div>
@@ -186,7 +187,7 @@
       <div class="navbar-text float-right social">
         <a href="#"><i class="fab fa-facebook-square fa-2x"></i></a>
         <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
-        <a href="#"><i class="fab fa-github-square fa-2x"></i></a>
+        <a href="https://github.com/MaxBurson/Web3DAppsMaxwellBurson" target="_blank"><i class="fab fa-github-square fa-2x"></i></a>
       </div>
     </div>
   </nav>

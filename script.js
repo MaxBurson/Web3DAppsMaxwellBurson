@@ -1,44 +1,49 @@
 
 let scene, camera, renderer, clock, mixer, actions = [], isWireframe = false, params, lights;
 let loadedModel;
-let secondModelMixer, secondModelActions = [];
-let sound, secondSound;
+let sound, audioLoader;
+let currentModelPath = '';
+let modelDataMap = {};
 
-// figure out which model
+// flashlight emission
+let flashlightMeshes = [];
+let flashlightAnimating = false;
+let flashlightAnimStartTime = 0;
+
+// figure out which model to load on this page
 function getModelPath() {
     var page = window.location.pathname.split('/').pop();
     if (page === 'compass.html') return 'assets/models/Compass/compassMaxwell.glb';
     if (page === 'flashlight.html') return 'assets/models/Flashlight/flashlightMaxwell.glb';
-    return 'assets/models/Medkit/MedkitMaxwell.glb'; 
+    return 'assets/models/Medkit/MedkitMaxwell.glb';
 }
 
-// switching model
-function getModel2Path() {
-    var page = window.location.pathname.split('/').pop();
-    if (page === 'compass.html') return 'assets/models/Flashlight/flashlightMaxwell.glb';
-    if (page === 'flashlight.html') return 'assets/models/Medkit/MedkitMaxwell.glb';
-    return 'assets/models/Compass/compassMaxwell.glb';
+// all models to cycle through when switching
+var allModels = [
+    'assets/models/Medkit/MedkitMaxwell.glb',
+    'assets/models/Compass/compassMaxwell.glb',
+    'assets/models/Flashlight/flashlightMaxwell.glb'
+];
+
+// maps model paths to their audio files
+function getAudioForModel(modelPath) {
+    if (modelPath.includes('Compass')) return 'assets/audio/Compass.mp3';
+    if (modelPath.includes('Flashlight')) return 'assets/audio/Flashlight.mp3';
+    return 'assets/audio/Medikit.mp3';
 }
 
-// get the audio file for the specific model
-function getAudioPath() {
-    var page = window.location.pathname.split('/').pop();
-    if (page === 'compass.html') return 'assets/audio/Compass.mp3';
-    if (page === 'flashlight.html') return 'assets/audio/Flashlight.mp3';
-    return 'assets/audio/Medikit.mp3'; 
+// MANUAL ANIMATION SYSTEM | calculate emission intensity based on animation time
+function getFlashlightEmission(t) {
+    var t13 = 13 / 24;
+    var t27 = 27 / 24;
+    var t40 = 40 / 24;
+    if (t < t13) return 0;
+    if (t <= t27) return 8.0 * ((t - t13) / (t27 - t13));
+    if (t <= t40) return 8.0 * (1 - (t - t27) / (t40 - t27));
+    return 0;
 }
-
-// audio file for the new modeule
-function getAudio2Path() {
-    var page = window.location.pathname.split('/').pop();
-    if (page === 'compass.html') return 'assets/audio/Flashlight.mp3';
-    if (page === 'flashlight.html') return 'assets/audio/Medikit.mp3';
-    return 'assets/audio/Compass.mp3';
-}
-
 
 init();
-
 
 function init() {
 
@@ -57,8 +62,8 @@ function init() {
     renderer.shadowMap.enabled = true;
     onResize();
 
-    // 3 WAY LIGHTING (SELF IMPLEMENTED)
-    const ambient = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
+    // 3 WAY LIGHTING
+    const ambient = new THREE.HemisphereLight(0xffffff, 0x444444, 1.8);
     scene.add(ambient);
 
     // key light
@@ -71,13 +76,24 @@ function init() {
     fillLight.position.set(-5, 5, -5);
     scene.add(fillLight);
 
+    // extra front light for flashlight page
+    var page = window.location.pathname.split('/').pop();
+    if (page === 'flashlight.html') {
+        const frontLight = new THREE.DirectionalLight(0xffffff, 2.5);
+        frontLight.position.set(0, 10, 2);
+        scene.add(frontLight);
+
+        const sideLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        sideLight.position.set(8, 5, 5);
+        scene.add(sideLight);
+    }
+
     // spotlight
     lights = {};
     lights.spot = new THREE.SpotLight();
     lights.spot.visible = false;
     lights.spot.position.set(0, 20, 0);
     lights.spotHelper = new THREE.SpotLightHelper(lights.spot);
-
     lights.spotHelper.visible = false;
     scene.add(lights.spot);
     scene.add(lights.spotHelper);
@@ -93,38 +109,33 @@ function init() {
             moving: false
         }
     };
+
+    // dat.GUI spotlight controls (little top left pop up)
     const gui = new dat.GUI({ autoPlace: false });
     const guiContainer = document.getElementById('gui-container');
     guiContainer.appendChild(gui.domElement);
     guiContainer.style.position = 'fixed';
 
     const spot = gui.addFolder('Spot Light');
-
     spot.open();
     spot.add(params.spot, 'enable').onChange(function(value) {
         lights.spot.visible = value;
     });
-
     spot.addColor(params.spot, 'color').onChange(function(value) {
         lights.spot.color = new THREE.Color(value);
     });
-
     spot.add(params.spot, 'distance').min(0).max(20).onChange(function(value) {
         lights.spot.distance = value;
     });
-
     spot.add(params.spot, 'angle').min(0.1).max(6.28).onChange(function(value) {
         lights.spot.angle = value;
     });
-
     spot.add(params.spot, 'penumbra').min(0).max(1).onChange(function(value) {
         lights.spot.penumbra = value;
     });
-
     spot.add(params.spot, 'helper').onChange(function(value) {
         lights.spotHelper.visible = value;
     });
-
     spot.add(params.spot, 'moving');
 
     // controls
@@ -133,28 +144,23 @@ function init() {
     controls.target.set(0, 0, 0);
     controls.update();
 
-    // Audio
+    // audio setup
     const listener = new THREE.AudioListener();
     camera.add(listener);
-
     sound = new THREE.Audio(listener);
-    secondSound = new THREE.Audio(listener);
+    audioLoader = new THREE.AudioLoader();
 
-    const audioLoader = new THREE.AudioLoader();
-    audioLoader.load(getAudioPath(), function(buffer) {
-        sound.setBuffer(buffer);
-        sound.setLoop(false);
-        sound.setVolume(1.0);
-    });
-    audioLoader.load(getAudio2Path(), function(buffer) {
-        secondSound.setBuffer(buffer);
-        secondSound.setLoop(false);
-        secondSound.setVolume(1.0);
+    // preload model data
+    $.getJSON('data.json', function(data) {
+        data.objects.forEach(function(obj) {
+            modelDataMap[obj.model] = obj;
+        });
     });
 
     // play animation button
     var btn = document.getElementById('btn');
     btn.addEventListener('click', function() {
+
         if (actions.length > 0) {
             actions.forEach(function(action) {
                 action.timeScale = 1;
@@ -164,55 +170,36 @@ function init() {
             if (sound.isPlaying) sound.stop();
             sound.play();
         }
+
+        // start flashlight emission sync
+        if (flashlightMeshes.length > 0) {
+            flashlightAnimating = true;
+            flashlightAnimStartTime = clock.getElapsedTime();
+        }
     });
 
-    // switch to wireframe button
+    // wireframe button
     var wireframeBtn = document.getElementById('toggleWireframe');
     wireframeBtn.addEventListener('click', function() {
         isWireframe = !isWireframe;
         toggleWireframe(isWireframe);
     });
 
-
-    // rotate model button
+    // rotate button
     var rotateBtn = document.getElementById('rotate');
     rotateBtn.addEventListener('click', function() {
         if (loadedModel) {
             var axis = new THREE.Vector3(0, 1, 0);
             loadedModel.rotateOnAxis(axis, Math.PI / 8);
-        } else {
-            console.warn('Model not loaded yet');
         }
     });
 
-    // change model (delete?)
+    // switch model button - cycles through all three models
     var switchBtn = document.getElementById('switchmodel');
     switchBtn.addEventListener('click', function() {
-        loadModel(getModel2Path());
-    });
-
-    // alt animation button
-    var playSecondBtn = document.getElementById('playSecondModelAnimation');
-    playSecondBtn.addEventListener('click', function() {
-        if (secondModelActions.length > 0) {
-            secondModelActions.forEach(function(action) {
-                action.reset();
-                action.setLoop(THREE.LoopOnce);
-                action.clampWhenFinished = true;
-                action.play();
-            });
-            if (secondSound.isPlaying) secondSound.stop();
-            secondSound.play();
-        } else {
-            console.warn('No animation for second model');
-        }
-    });
-
-    // turn on and off spotlight 
-    var spotBtn = document.getElementById('spotToggle');
-    spotBtn.addEventListener('click', function() {
-        lights.spot.visible = !lights.spot.visible;
-        params.spot.enable  = lights.spot.visible;
+        var currentIndex = allModels.indexOf(currentModelPath);
+        var nextIndex = (currentIndex + 1) % allModels.length;
+        loadModel(allModels[nextIndex]);
     });
 
     // load model
@@ -223,12 +210,17 @@ function init() {
             scene.remove(loadedModel);
         }
 
+        isWireframe = false;
+        flashlightMeshes = [];
+        flashlightAnimating = false;
+
         loader.load(modelPath, function(gltf) {
             var model = gltf.scene;
             scene.add(model);
             loadedModel = model;
+            currentModelPath = modelPath;
 
-            // auto center the model in the screen
+            // auto center
             model.updateMatrixWorld(true);
             var box = new THREE.Box3().setFromObject(model);
             var centre = box.getCenter(new THREE.Vector3());
@@ -239,34 +231,56 @@ function init() {
             controls.target.set(0, 0, 0);
             controls.update();
 
-
+            // animations (CONTINUED)
             mixer = new THREE.AnimationMixer(model);
-            var animations = gltf.animations;
             actions = [];
-
-
-            animations.forEach(function(clip) {
-                var action = mixer.clipAction(clip);
-                actions.push(action);
+            gltf.animations.forEach(function(clip) {
+                actions.push(mixer.clipAction(clip));
             });
 
-
-            if (modelPath === getModel2Path() && modelPath !== getModelPath()) {
-                secondModelMixer = mixer;
-                secondModelActions = actions;
+            // store flashlight emission meshes
+            if (modelPath.includes('Flashlight')) {
+                model.traverse(function(object) {
+                    if (object.isMesh) {
+                        var n = object.name.toLowerCase();
+                        if (n.includes('bulb') || n.includes('glass') || n.includes('lens')) {
+                            object.material = object.material.clone();
+                            object.material.emissive = new THREE.Color(1, 0.5, 0.0);
+                            object.material.emissiveIntensity = 0;
+                            object.userData.origOpacity = object.material.opacity;
+                            object.userData.emissiveMultiplier = n.includes('bulb') ? 0.4 : 1.0;
+                            flashlightMeshes.push(object);
+                        }
+                    }
+                });
             }
 
+            // update info panel
+            if (modelDataMap[modelPath]) {
+                var info = modelDataMap[modelPath];
+                $('#page-title').text(info.name);
+                $('#info-title').text(info.name);
+                $('#info-desc').text(info.desc);
+            }
+
+            // update audio
+            if (sound.isPlaying) sound.stop();
+            audioLoader.load(getAudioForModel(modelPath), function(buffer) {
+                sound.setBuffer(buffer);
+                sound.setLoop(false);
+                sound.setVolume(1.0);
+            });
 
         }, undefined, function(error) {
             console.error('Error loading model:', error);
         });
     }
+
     window._loadModel = loadModel;
     loadModel(getModelPath());
     window.addEventListener('resize', onResize, false);
     animate();
 }
-
 
 function toggleWireframe(enable) {
     scene.traverse(function(object) {
@@ -276,30 +290,47 @@ function toggleWireframe(enable) {
     });
 }
 
-//animation function
+// animation loop
 function animate() {
     requestAnimationFrame(animate);
 
+    var delta = clock.getDelta();
+
     if (mixer) {
-        mixer.update(clock.getDelta());
+        mixer.update(delta);
     }
-    if (secondModelMixer) {
-        secondModelMixer.update(clock.getDelta());
+
+    // drive flashlight emission from animation time
+    if (flashlightAnimating && flashlightMeshes.length > 0) {
+        var elapsed = clock.getElapsedTime() - flashlightAnimStartTime;
+        var intensity = getFlashlightEmission(elapsed);
+        var t = intensity / 8.0;
+        flashlightMeshes.forEach(function(mesh) {
+            var multiplier = mesh.userData.emissiveMultiplier !== undefined ? mesh.userData.emissiveMultiplier : 1.0;
+            mesh.material.emissiveIntensity = intensity * multiplier;
+            var origOpacity = mesh.userData.origOpacity !== undefined ? mesh.userData.origOpacity : 1.0;
+            mesh.material.opacity = origOpacity + t * (1.0 - origOpacity);
+            mesh.material.transparent = mesh.material.opacity < 1.0;
+            mesh.material.needsUpdate = true;
+        });
+
+        if (elapsed > 54 / 24) {
+            flashlightAnimStartTime = clock.getElapsedTime();
+        }
     }
 
     renderer.render(scene, camera);
 
-    var time  = clock.getElapsedTime();
-    var delta = Math.sin(time) * 5;
+    var time = clock.getElapsedTime();
+    var spotDelta = Math.sin(time) * 5;
     if (params && params.spot.moving) {
-        lights.spot.position.x = delta;
+        lights.spot.position.x = spotDelta;
         lights.spotHelper.update();
     }
 }
 
-//resize function
+// resize function
 function onResize() {
-    // use the canvass actual column width to work it out
     var canvas = document.getElementById('threeContainer');
     var parent = canvas.parentElement;
     var width  = parent ? parent.clientWidth : window.innerWidth;
